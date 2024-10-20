@@ -1,4 +1,4 @@
-package kz.onetech.one_tech_project;
+package kz.onetech.onetechproject;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

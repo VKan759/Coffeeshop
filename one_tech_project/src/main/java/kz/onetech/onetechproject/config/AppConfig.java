@@ -1,20 +1,19 @@
-package kz.onetech.one_tech_project.config;
+package kz.onetech.onetechproject.config;
 
-import kz.onetech.one_tech_project.repository.CoffeeRepository;
-import kz.onetech.one_tech_project.repository.CoffeeRepositoryImpl;
-import kz.onetech.one_tech_project.repository.OrderRepository;
-import kz.onetech.one_tech_project.repository.OrderRepositoryImpl;
-import kz.onetech.one_tech_project.service.CoffeeShopService;
-import kz.onetech.one_tech_project.service.CoffeeShopServiceImpl;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import kz.onetech.onetechproject.repository.CoffeeRepository;
+import kz.onetech.onetechproject.repository.CoffeeRepositoryImpl;
+import kz.onetech.onetechproject.repository.OrderRepository;
+import kz.onetech.onetechproject.repository.OrderRepositoryImpl;
+import kz.onetech.onetechproject.service.CoffeeShopService;
+import kz.onetech.onetechproject.service.CoffeeShopServiceImpl;
+import org.springframework.context.annotation.*;
 
 import java.util.HashMap;
 import java.util.ArrayList;
 
 @Configuration
-@ComponentScan(basePackages = "com.example")
+@EnableAspectJAutoProxy
+@ComponentScan(basePackages = "kz.onetech.one_tech_project")
 public class AppConfig {
 
     @Bean
@@ -31,6 +30,7 @@ public class AppConfig {
                 .build();
     }
 
+    @Primary
     @Bean
     public CoffeeShopService coffeeShopService(CoffeeRepository coffeeRepository, OrderRepository orderRepository) {
         return new CoffeeShopServiceImpl(coffeeRepository, orderRepository);

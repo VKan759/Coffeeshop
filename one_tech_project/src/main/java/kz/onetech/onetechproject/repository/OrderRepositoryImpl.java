@@ -1,6 +1,6 @@
-package kz.onetech.one_tech_project.repository;
+package kz.onetech.onetechproject.repository;
 
-import kz.onetech.one_tech_project.model.Order;
+import kz.onetech.onetechproject.model.Order;
 import lombok.Builder;
 
 import java.util.ArrayList;

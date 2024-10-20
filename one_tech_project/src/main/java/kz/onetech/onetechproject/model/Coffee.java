@@ -1,4 +1,4 @@
-package kz.onetech.one_tech_project.model;
+package kz.onetech.onetechproject.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

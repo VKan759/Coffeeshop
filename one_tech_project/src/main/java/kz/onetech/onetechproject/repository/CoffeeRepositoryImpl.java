@@ -1,8 +1,9 @@
-package kz.onetech.one_tech_project.repository;
+package kz.onetech.onetechproject.repository;
 
-import kz.onetech.one_tech_project.model.Coffee;
+import kz.onetech.onetechproject.model.Coffee;
 import lombok.Builder;
 import java.util.Map;
+import java.util.Optional;
 
 @Builder
 public class CoffeeRepositoryImpl implements CoffeeRepository {
@@ -16,8 +17,11 @@ public class CoffeeRepositoryImpl implements CoffeeRepository {
     }
 
     @Override
-    public Coffee getCoffeeByName(String name) {
-        return coffeeInventory.get(name);
+    public Optional<Coffee> getCoffeeByName(String name) {
+        if (coffeeInventory == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(coffeeInventory.get(name));
     }
 
     @Override
