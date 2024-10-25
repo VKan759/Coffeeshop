@@ -1,7 +1,6 @@
 package kz.onetech.onetechproject;
 
-import kz.onetech.onetechproject.model.Coffee;
-import kz.onetech.onetechproject.model.OrderItem;
+import kz.onetech.onetechproject.model.*;
 import kz.onetech.onetechproject.service.CoffeeShopServiceDB;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +13,7 @@ import java.util.Optional;
 
 @SpringBootApplication
 @EnableAspectJAutoProxy
+
 public class OneTechProjectApplication {
 
     public static void main(String[] args) {
@@ -21,19 +21,28 @@ public class OneTechProjectApplication {
         ApplicationContext context =
                 SpringApplication.run(OneTechProjectApplication.class, args);
 
-        // Получение сервисного класса через
+        // Получение сервисного класса
         CoffeeShopServiceDB coffeeShopService = context.getBean(CoffeeShopServiceDB.class);
 
         // Добавление кофе в меню
-        Coffee espresso = new Coffee("Espresso", 250);
-        Coffee cappuccino = new Coffee("Cappuccino", 300);
-        Coffee latte = new Coffee("Latte", 400);
+        Coffee espresso = new Coffee();
+        espresso.setName("Espresso");
+        espresso.setPrice(250);
+
+        Coffee cappuccino = new Coffee();
+        cappuccino.setName("Cappuccino");
+        cappuccino.setPrice(300);
+        Coffee latte = new Coffee();
+        latte.setName("Latte");
+        latte.setPrice(400);
         List.of(espresso, cappuccino, latte).forEach(coffeeShopService::addNewCoffee);
 
         // Создание заказа
         OrderItem item1 = new OrderItem();
         item1.setCoffee(espresso);
         item1.setQuantity(2);
+        item1.setAdditive(Additive.DECAF);
+        item1.setSize(Size.L);
 
         OrderItem item2 = new OrderItem();
         item2.setCoffee(cappuccino);
@@ -46,7 +55,12 @@ public class OneTechProjectApplication {
         // Размещение заказа и показ заказов
         coffeeShopService.placeOrder(Arrays.asList(item1, item2));
         coffeeShopService.placeOrder(List.of(item3));
-        coffeeShopService.showAllOrders(coffeeShopService.getAllOrders());
+        coffeeShopService.showAllOrders();
+        coffeeShopService.getAllOrderItems();
+
+        // Поиск заказа для предоставления чека посетителю
+        Optional<Order> orderById = coffeeShopService.findOrderById(1);
+        System.out.println(orderById);
 
         // Проверка AOP
         Optional<Coffee> notFoundCoffee = coffeeShopService.findCoffeeByName("Espresso1");

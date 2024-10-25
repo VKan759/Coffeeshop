@@ -14,20 +14,20 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class BeforeAndAfterLoggingAspect {
-    @Before("execution(* kz.onetech.onetechproject.repository.CoffeeRepositoryDB.getCoffeeByName(..))")
+    @Before("execution(* kz.onetech.onetechproject.repository.jpa.CoffeeRepositoryDB.findCoffeeByName(..))")
     public void logBefore(JoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
         log.info("Вызван метод {}", signature.toShortString());
     }
 
-    @AfterReturning("execution(* kz.onetech.onetechproject.repository.CoffeeRepositoryDB.getCoffeeByName(..))")
+    @AfterReturning("execution(* kz.onetech.onetechproject.repository.jpa.CoffeeRepositoryDB.findCoffeeByName(..))")
     public void logAfter(JoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
         Object[] args = joinPoint.getArgs();
         log.info("Завершен метод {}", signature.toShortString());
     }
 
-    @Around("execution( * kz.onetech.onetechproject.repository.CoffeeRepositoryDB.getCoffeeByName(..))")
+    @Around("execution( * kz.onetech.onetechproject.repository.jpa.CoffeeRepositoryDB.getCoffeeByName(..))")
     public Optional<Coffee> handleException(ProceedingJoinPoint proceedingJoinPoint) {
         try {
             return (Optional<Coffee>) proceedingJoinPoint.proceed();
