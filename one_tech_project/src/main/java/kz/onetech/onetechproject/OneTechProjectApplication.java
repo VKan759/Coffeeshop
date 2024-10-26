@@ -53,20 +53,24 @@ public class OneTechProjectApplication {
         item3.setQuantity(5);
 
         // Размещение заказа и показ заказов
+        //После размещения заказа заказ отправляется в бар для изготовления.
+
+        System.out.println("-----------------------Размещение заказа и показ заказов---------------------------------");
         coffeeShopService.placeOrder(Arrays.asList(item1, item2));
         coffeeShopService.placeOrder(List.of(item3));
-        coffeeShopService.showAllOrders();
-        coffeeShopService.getAllOrderItems();
 
         // Поиск заказа для предоставления чека посетителю
+        System.out.println("-----------------------Поиск заказа для предоставления чека посетителю---------------------------------");
         Optional<Order> orderById = coffeeShopService.findOrderById(1);
         System.out.println(orderById);
+        System.out.println("-----------------------Поиск заказа для предоставления чека посетителю---------------------------------");
 
-        // Проверка AOP
+        //Проверка AOP
+        System.out.println("-----------------------Проверка AOP---------------------------------");
         Optional<Coffee> notFoundCoffee = coffeeShopService.findCoffeeByName("Espresso1");
         Optional<Coffee> foundCoffee = coffeeShopService.findCoffeeByName("Espresso");
-
         List<Optional<Coffee>> list = List.of(notFoundCoffee, foundCoffee);
         list.forEach(System.out::println);
+        System.out.println("-----------------------Проверка AOP---------------------------------");
     }
 }

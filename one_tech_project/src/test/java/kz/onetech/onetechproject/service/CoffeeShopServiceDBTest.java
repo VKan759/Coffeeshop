@@ -1,5 +1,6 @@
 package kz.onetech.onetechproject.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kz.onetech.onetechproject.model.Coffee;
 import kz.onetech.onetechproject.model.Order;
 import kz.onetech.onetechproject.model.OrderItem;
@@ -11,12 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class CoffeeShopServiceDBTest {
@@ -26,6 +29,8 @@ class CoffeeShopServiceDBTest {
     OrderRepositoryDB orderRepository;
     @Mock
     OrderItemRepositoryDB orderItemRepository;
+    @Mock
+    KafkaTemplate kafkaTemplate;
     @InjectMocks
     CoffeeShopServiceDB coffeeShopServiceDB;
 
@@ -39,27 +44,37 @@ class CoffeeShopServiceDBTest {
         Coffee coffee1 = Coffee.builder()
                 .name("First coffee")
                 .price(100)
-                .id(1)
                 .build();
+
         OrderItem orderItem1 = OrderItem.builder()
-                .id(1)
                 .coffee(coffee1)
                 .quantity(1)
                 .build();
+
         coffee1.setOrderItems(List.of(orderItem1));
+
         Order order = Order.builder()
-                .id(1)
                 .orderItems(List.of(orderItem1))
                 .orderTotalAmount(orderItem1.getOrderItemPrice())
                 .build();
+
         when(coffeeRepository.save(any(Coffee.class))).thenReturn(coffee1);
         when(orderRepository.save(any(Order.class))).thenReturn(order);
-        when(orderRepository.findAll()).thenReturn(List.of(order));
         when(orderItemRepository.save(any(OrderItem.class))).thenReturn(orderItem1);
-        assertThat(coffeeShopServiceDB.placeOrder(List.of(orderItem1)))
+
+        Order placedOrder = coffeeShopServiceDB.placeOrder(List.of(orderItem1));
+
+        assertThat(placedOrder)
                 .usingRecursiveComparison()
                 .isEqualTo(order);
-        assertThat(orderRepository.findAll()).usingRecursiveComparison().isEqualTo(List.of(order));
+
+        assertThat(placedOrder.getOrderItems())
+                .usingRecursiveComparison()
+                .isEqualTo(List.of(orderItem1));
+
+        verify(orderRepository).save(any(Order.class));
+
+        verify(kafkaTemplate, times(1)).send("orders-for-bar", OrderItemMapper.fromOrderItemToDTO(orderItem1));
     }
 
     @Test
@@ -171,6 +186,18 @@ class CoffeeShopServiceDBTest {
         assertThat(coffeeShopServiceDB.placeOrder(orderItems))
                 .usingRecursiveComparison()
                 .isEqualTo(order);
+    }
+
+    @Test
+    public void testBarService() {
+        BarService barService = new BarService();
+        assertThatThrownBy(() -> barService.receiveOrder(null)).isInstanceOf(RuntimeException.class).hasMessage(
+                "orderItemDTO не может быть null");
+    }
+
+    @Test
+    public void testObjectMapper() {
+        assertThatThrownBy(() -> OrderItemMapper.fromOrderItemToDTO(null)).isInstanceOf(RuntimeException.class).hasMessage("OrderItem is empty");
     }
 }
 
