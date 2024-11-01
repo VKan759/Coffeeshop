@@ -1,5 +1,6 @@
 package kz.onetech.onetechproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +33,11 @@ public class OrderItem {
 
     private double orderItemPrice;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
     private double calculateOrderItemPrice() {
         return quantity * (coffee.getPrice() * size.getSizeCoefficient()
                 + (additive == null ? 0 : additive.getPrice()));
@@ -45,8 +51,4 @@ public class OrderItem {
     public double getOrderItemPrice() {
         return calculateOrderItemPrice();
     }
-
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
 }

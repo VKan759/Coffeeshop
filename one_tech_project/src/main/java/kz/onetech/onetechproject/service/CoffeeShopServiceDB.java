@@ -4,11 +4,9 @@ import jakarta.transaction.Transactional;
 import kz.onetech.onetechproject.model.Coffee;
 import kz.onetech.onetechproject.model.Order;
 import kz.onetech.onetechproject.model.OrderItem;
-import kz.onetech.onetechproject.model.OrderItemDTO;
 import kz.onetech.onetechproject.repository.jpa.CoffeeRepositoryDB;
 import kz.onetech.onetechproject.repository.jpa.OrderItemRepositoryDB;
 import kz.onetech.onetechproject.repository.jpa.OrderRepositoryDB;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -49,9 +47,7 @@ public class CoffeeShopServiceDB implements CoffeeShopService {
         Order savedOrder = orderRepository.save(order);
         savedOrder.setOrderItems(orderItems);
         System.out.println("Order placed with total amount: " + total);
-        savedOrder.getOrderItems().forEach(orderItem -> {
-            kafkaTemplate.send("orders-for-bar", OrderItemMapper.fromOrderItemToDTO(orderItem));
-        });
+        savedOrder.getOrderItems().forEach(orderItem -> kafkaTemplate.send("orders-for-bar", OrderItemMapper.fromOrderItemToDTO(orderItem)));
         return savedOrder;
     }
 
@@ -77,9 +73,9 @@ public class CoffeeShopServiceDB implements CoffeeShopService {
     }
 
     public Optional<Order> findOrderById(int id) {
-        Optional<Order> orderById = orderRepository.findById(id);
-        orderItemRepository.findAll().stream().filter(x -> x.getOrder().equals(orderById.get())).forEach(System.out::println);
-        return orderById;
+        //orderItemRepository.findAll().stream().filter(x -> x.getOrder().equals(orderById.get())).forEach(System
+        // .out::println);
+        return orderRepository.findById(id);
     }
 
     public List<OrderItem> getAllOrderItems() {

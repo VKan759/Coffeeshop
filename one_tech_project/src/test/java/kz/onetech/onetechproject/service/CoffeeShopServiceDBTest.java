@@ -1,6 +1,5 @@
 package kz.onetech.onetechproject.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import kz.onetech.onetechproject.model.Coffee;
 import kz.onetech.onetechproject.model.Order;
 import kz.onetech.onetechproject.model.OrderItem;
@@ -189,14 +188,14 @@ class CoffeeShopServiceDBTest {
     }
 
     @Test
-    public void testBarService() {
+    void testBarService() {
         BarService barService = new BarService();
         assertThatThrownBy(() -> barService.receiveOrder(null)).isInstanceOf(RuntimeException.class).hasMessage(
                 "orderItemDTO не может быть null");
     }
 
     @Test
-    public void testObjectMapper() {
+    void testObjectMapper() {
         assertThatThrownBy(() -> OrderItemMapper.fromOrderItemToDTO(null)).isInstanceOf(RuntimeException.class).hasMessage("OrderItem is empty");
     }
 }

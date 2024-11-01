@@ -37,3 +37,30 @@
         - Возможность указать размер стакана/чашки кофе с последующим перерасчетом заказа с учетом добавок
         - Т.к. CoffeeShopServiceDB.class в основном рабоатет с данными из БД, класс помечен полностью аннотацией   @Transactional
         - Добавлены unit-тесты
+
+### Practice5
+-Для регистрации пользователя необходимо по ссылке http://localhost:8080/api/auth/signup передать
+                -{
+                "username" : "user",
+                "password" : "123456789",
+                "email" : "user@gmail.com",
+                "role" : ["mod", "user"]
+                }
+
+-для генерации ключа необходимо по ссылке http://localhost:8080/api/auth/signin передать 
+                -{
+                "username" : "user",
+                "password" : "123456789"
+                }
+
+- Для демонстрации размещения заказа необходимо по ссылке http://localhost:8080/order добавить токен полученный 
+  после входа и в тело запроса добавить
+- "[
+  {
+  "coffee": {  "id": 1,  "name": "Espresso",  "price": 250  },  "quantity": 2,  "additive": "DECAF",  "size": "L"  },
+  {  "coffee": {  "id": 2,  "name": "Cappuccino",  "price": 300  },  "quantity": 3  },
+  {  "coffee": {  "id": 3,  "name": "Latte",  "price": 400  },  "quantity": 5  }  ]"
+
+- для проверки прав доступа необходимо вставить токен, метод запроса изменить на GET и отправить запрос по ссылке http://localhost:8080/api/test/user
+- у нас данном случае имеются права доступа только для user_role и moderator_role, следовательно при отправке GET 
+  запроса по ссылке http://localhost:8080/api/test/admin получим ошибку со статусом 401.

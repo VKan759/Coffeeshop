@@ -1,1 +1,1 @@
-INSERT INTO coffee (name, price) VALUES ('Tea', 300), ('Raf', 500);
+INSERT INTO coffee_table (name, price) VALUES ('Espresso', 250), ('Cappuccino', 300), ('Latte', 400);
