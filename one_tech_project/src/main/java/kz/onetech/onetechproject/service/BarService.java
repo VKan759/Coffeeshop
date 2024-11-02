@@ -11,10 +11,10 @@ public class BarService {
     @KafkaListener(topics = "orders-for-bar")
     public void receiveOrder(OrderItemDTO orderItemDTO) throws InterruptedException {
         if (orderItemDTO == null) {
-            throw new RuntimeException("orderItemDTO не может быть null");
+            throw new IllegalArgumentException("orderItemDTO не может быть null");
         }
-        System.out.println(orderItemDTO + " принят в работу...");
+        log.info("{} принят в работу...", orderItemDTO);
         Thread.sleep(5000);
-        System.out.println("Готов к выдаче: " + orderItemDTO);
+        log.info("Готов к выдаче: {}", orderItemDTO);
     }
 }

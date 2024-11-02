@@ -1,15 +1,18 @@
 package kz.onetech.onetechproject.service;
 
 
-import kz.onetech.onetechproject.model.Additive;
 import kz.onetech.onetechproject.model.OrderItem;
 import kz.onetech.onetechproject.model.OrderItemDTO;
-import kz.onetech.onetechproject.model.Size;
 
 public class OrderItemMapper {
+
+    private OrderItemMapper() {
+        throw new UnsupportedOperationException("Утилитарный класс не может быть инстанцирован");
+    }
+
     public static OrderItemDTO fromOrderItemToDTO(OrderItem orderItem) {
         if (orderItem == null) {
-            throw new RuntimeException("OrderItem is empty");
+            throw new IllegalArgumentException("OrderItem is empty");
         }
         return OrderItemDTO.builder()
                 .id(orderItem.getId())

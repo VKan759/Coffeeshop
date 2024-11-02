@@ -46,7 +46,7 @@ public class CoffeeShopServiceDB implements CoffeeShopService {
         });
         Order savedOrder = orderRepository.save(order);
         savedOrder.setOrderItems(orderItems);
-        System.out.println("Order placed with total amount: " + total);
+        log.info("Order placed with total amount: " + total);
         savedOrder.getOrderItems().forEach(orderItem -> kafkaTemplate.send("orders-for-bar", OrderItemMapper.fromOrderItemToDTO(orderItem)));
         return savedOrder;
     }
@@ -73,8 +73,6 @@ public class CoffeeShopServiceDB implements CoffeeShopService {
     }
 
     public Optional<Order> findOrderById(int id) {
-        //orderItemRepository.findAll().stream().filter(x -> x.getOrder().equals(orderById.get())).forEach(System
-        // .out::println);
         return orderRepository.findById(id);
     }
 
@@ -83,9 +81,8 @@ public class CoffeeShopServiceDB implements CoffeeShopService {
     }
 
     public void showAllOrders() {
-        System.out.println("Список всех заказов из БД:");
-        getAllOrders().forEach(System.out::println);
-        System.out.println();
+        log.info("Список всех заказов из БД:");
+        getAllOrders().forEach(order -> log.info(order.toString()));
     }
 }
 

@@ -23,7 +23,6 @@ public class BeforeAndAfterLoggingAspect {
     @AfterReturning("execution(* kz.onetech.onetechproject.repository.jpa.CoffeeRepositoryDB.findCoffeeByName(..))")
     public void logAfter(JoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
-        Object[] args = joinPoint.getArgs();
         log.info("Завершен метод {}", signature.toShortString());
     }
 
