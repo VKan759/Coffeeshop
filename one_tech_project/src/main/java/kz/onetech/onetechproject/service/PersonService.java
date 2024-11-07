@@ -17,7 +17,13 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
-
+/**
+ * Сервис для управления регистрацией и созданием пользователей.
+ * <p>
+ * Обеспечивает регистрацию новых пользователей с проверкой уникальности
+ * имени пользователя и email, а также назначение ролей, используя
+ * репозитории для управления данными о пользователях и ролях.
+ */
 @Service
 @AllArgsConstructor
 public class PersonService {
@@ -25,6 +31,16 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final RoleRepository roleRepository;
 
+    /**
+     * Регистрирует нового пользователя на основе данных из {@link SignupRequestDTO}.
+     * <p>
+     * Проверяет уникальность имени пользователя и email, а затем
+     * назначает соответствующую роль или роли, сохраненные в базе данных.
+     *
+     * @param signUpRequest DTO, содержащий данные о новом пользователе:
+     *                      имя пользователя, email, пароль и роли.
+     * @return объект {@link RegisterDTO} с информацией о статусе регистрации.
+     */
     public RegisterDTO signUp(SignupRequestDTO signUpRequest) {
         if (Boolean.TRUE.equals(personRepository.existsByUsername(signUpRequest.getUsername()))
                 || Boolean.TRUE.equals(personRepository.existsByEmail(signUpRequest.getEmail()))) {
